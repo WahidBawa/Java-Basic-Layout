@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Window extends Canvas {
-//    public static final long serialVersionUID = -240840600533728354L;
     public Window(int width, int height, String title, Game game){
         JFrame frame = new JFrame(title);
 

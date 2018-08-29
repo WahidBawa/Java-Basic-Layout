@@ -2,17 +2,27 @@ package com.main;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.util.*;
 
 public class Game extends Canvas implements Runnable {
-//    private static final long serialVersionUID = 1550691097823471818L;
 
-    public final static int WIDTH = 640, HEIGHT = WIDTH / 12 * 9;
+    public final static int WIDTH = 1000, HEIGHT = WIDTH / 12 * 9;
 
     private Thread thread;
-    private boolean running = false;
+    public boolean running = false;
+//    private Random r = new Random(); // this may be needded later for multiole enemies
+
+    private Handler handler;
 
     public Game(){
-        new Window(WIDTH, HEIGHT, "Let's Build a Game", this);
+        handler = new Handler();
+        this.addKeyListener(new KeyInput(handler));
+
+        new Window(WIDTH, HEIGHT, "Generic Title", this);
+        Player x = new Player(WIDTH / 2 - 32, HEIGHT / 2 - 32, ID.Player);
+//        Player x2 = new Player(WIDTH / 2 + 32, HEIGHT / 2 - 32, ID.Player2);
+        handler.addObject(x);
+//        handler.addObject(x2);
     }
 
     public synchronized void start(){
@@ -30,6 +40,7 @@ public class Game extends Canvas implements Runnable {
     }
 
     public void run(){
+        this.requestFocus();
         long lastTime = System.nanoTime();
         double amountOfTicks = 60.0;
         double ns = 1000000000 / amountOfTicks;
@@ -51,7 +62,7 @@ public class Game extends Canvas implements Runnable {
 
             if(System.currentTimeMillis() - timer > 1000){
                 timer += 1000;
-                System.out.println("FPS: " + frames);
+//                System.out.println("FPS: " + frames);
                 frames = 0;
             }
         }
@@ -59,7 +70,7 @@ public class Game extends Canvas implements Runnable {
     }
 
     private void tick(){
-
+        handler.tick();
     }
 
     private void render(){
@@ -71,10 +82,9 @@ public class Game extends Canvas implements Runnable {
         Graphics g = bs.getDrawGraphics();
 
         g.setColor(Color.black);
-        g.fillRect(WIDTH / 2 - 25,HEIGHT / 2 - 25, 50, 50);
-        g.setColor(Color.green);
-        g.fillRect(WIDTH / 2 - 50,HEIGHT / 2 - 50, 50, 50);
-//        g.fillRect(0,0, 50, 50);
+        g.fillRect(0,0, WIDTH, HEIGHT);
+
+        handler.render(g);
 
         g.dispose();
         bs.show();
